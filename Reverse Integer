@@ -1,0 +1,43 @@
+/**
+ * Given a 32-bit signed integer, reverse digits of an integer.
+ */
+ class Solution {
+    public int reverse(int x) {
+        try {
+            if (x == 0 ) {
+                return 0;
+            }
+            String num = String.valueOf(x);
+            String[] strings = num.split("");
+            StringBuffer stringBuffer = new StringBuffer();
+            String symbol = "-";
+            if (symbol.equals(strings[0])) {
+                for (int i = strings.length - 1; i > 0; i--) {
+                    if (i == strings.length - 1 && ("0".equals(strings[i]))) {
+                        continue;
+                    } else {
+                        stringBuffer.append(strings[i]);
+                    }
+                }
+                int result = Integer.parseInt(stringBuffer.toString());
+                return -result;
+
+
+            } else {
+                for (int i = strings.length - 1; i > -1; i--) {
+                    if (i == strings.length - 1 && ("0".equals(strings[i]))) {
+                        continue;
+                    } else {
+                        stringBuffer.append(strings[i]);
+                    }
+                }
+                int result = Integer.parseInt(stringBuffer.toString());
+                return result;
+
+
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+}
