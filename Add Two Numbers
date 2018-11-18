@@ -1,0 +1,155 @@
+/**
+ * You are given two non-empty linked lists representing two non-negative integers.
+ * The digits are stored in reverse order and each of their nodes contain a single digit.
+ * Add the two numbers and return it as a linked list.
+ *
+ * You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+ */
+ 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        String digit1 = getNum(l1).toString();
+
+        String digit2 = getNum(l2).toString();
+
+        String result = handleStringAddition(digit1, digit2);
+        
+        ListNode l = new ListNode(0);
+        List<ListNode> listNodes = new ArrayList<>();
+        String[] nums = result.split("");
+
+        recursiveIncrease(l, nums, nums.length - 1, listNodes);
+        int counter = 0;
+        while (counter < listNodes.size() - 1) {
+            listNodes.get(counter).next = listNodes.get(counter + 1);
+            counter++;
+        }
+
+        return listNodes.get(0);
+    }
+     private String handleStringAddition(String digit1, String digit2) {
+        String[] group1 = digit1.split("");
+        String[] group2 = digit2.split("");
+        String[] group;
+        if (group1.length > group2.length) {
+            group = getFinalGroup(group1, group2);
+        } else {
+            group = getFinalGroup(group2, group1);
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        for(String s: group){
+            stringBuffer.append(s);
+        }
+
+        return stringBuffer.toString();
+    }
+    private String[] getFinalGroup(String[] group1, String[] group2) {
+        int counter = 0;
+        for (int i = group2.length - 1; i > -1; i--) {
+            group1[group1.length - 1 - counter] = String.valueOf(Integer.parseInt(group2[i])
+                    + Integer.parseInt(group1[group1.length - 1 - counter]));
+            counter++;
+        }
+        for (int j = group1.length - 1; j > -1; j--) {
+            if (Integer.parseInt(group1[j]) > 9) {
+                if (j - 1 > -1) {
+                    int addition = Integer.parseInt(group1[j]) / 10;
+                    group1[j] = String.valueOf(Integer.parseInt(group1[j]) % 10);
+                    group1[j - 1] = String.valueOf(Integer.parseInt(group1[j - 1]) + addition);
+                }
+            }
+        }
+        return group1;
+    }
+     public void recursiveIncrease(ListNode l, String[] nums, int size, List<ListNode> listNodes) {
+        if (size == -1) {
+            return;
+        } else {
+            l = new ListNode(Integer.parseInt(nums[size]));
+            listNodes.add(l);
+            recursiveIncrease(l.next, nums, --size, listNodes);
+        }
+
+    }
+    public static StringBuffer getNum(ListNode l) {
+        List<Integer> numList = new ArrayList<>();
+        numList.add(l.val);
+        l = l.next;
+        while (l != null) {
+            numList.add(l.val);
+            l = l.next;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < numList.size(); i++) {
+            stringBuffer.insert(0, numList.get(i));
+        }
+        return stringBuffer;
+    }
+}
+
+    private String[] getFinalGroup(String[] group1, String[] group2) {
+        int counter = 0;
+        for (int i = group2.length - 1; i > -1; i--) {
+            group1[group1.length - 1 - counter] = String.valueOf(Integer.parseInt(group2[i])
+                    + Integer.parseInt(group1[group1.length - 1 - counter]));
+            counter++;
+        }
+        for (int j = group1.length - 1; j > -1; j--) {
+            if (Integer.parseInt(group1[j]) > 9) {
+                if (j - 1 > -1) {
+                    int addition = Integer.parseInt(group1[j]) / 10;
+                    group1[j] = String.valueOf(Integer.parseInt(group1[j]) % 10);
+                    group1[j - 1] = String.valueOf(Integer.parseInt(group1[j - 1]) + addition);
+                }
+            }
+        }
+        return group1;
+    }
+
+
+    public void recursiveIncrease(ListNode l, String[] nums, int size, List<ListNode> listNodes) {
+        if (size == -1) {
+            return;
+        } else {
+            l = new ListNode(Integer.parseInt(nums[size]));
+            listNodes.add(l);
+            recursiveIncrease(l.next, nums, --size, listNodes);
+        }
+
+    }
+
+
+    public StringBuffer getNum(ListNode l) {
+        List<Integer> numList = new ArrayList<>();
+        numList.add(l.val);
+        l = l.next;
+        while (l != null) {
+            numList.add(l.val);
+            l = l.next;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < numList.size(); i++) {
+//            num += numList.get(i) * Math.pow(10, i);
+            stringBuffer.insert(0, numList.get(i));
+        }
+        return stringBuffer;
+    }
+
+    class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+        }
+    }
+
+}
