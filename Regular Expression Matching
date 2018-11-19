@@ -1,0 +1,39 @@
+
+/**
+ * Given an input string (s) and a pattern (p), implement regular expression matching with support for '.' and '*'.
+ */
+ class Solution {
+     public boolean isMatch(String s, String p) {
+        if ("".equals(s)) {
+           while (p.contains("*")) {
+                if(p.indexOf("*")==p.length()-1 && p.length()==2){
+                    return true;
+                }
+                if(p.indexOf("*")==1) {
+                    p = p.substring(p.indexOf("*") + 1);
+                }
+                else{
+                    break;
+                }
+            }
+            if(!"".equals(p)){
+                return false;
+            }
+        }
+
+        String regex = p;
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(s);
+        String group = "";
+        while (matcher.find()) {
+            group = matcher.group();
+            if (s.equals(group)) {
+                break;
+            }
+        }
+        if (group.equals(s)) {
+            return true;
+        }
+        return false;
+    }
+}
