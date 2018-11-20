@@ -7,8 +7,8 @@
  * <p>
  * Note: You may not slant the container and n is at least 2.
  */
- 
- class Solution {
+ // solution 1
+ class Solution1 {
     public int maxArea(int[] height) {
         int mostArea = 0;
         for (int i = 0; i < height.length - 1; i++) {
@@ -25,5 +25,29 @@
             }
         }
         return mostArea;
+    }
+}
+
+//solution2
+class Solution2 {
+    public int maxArea(int[] height) {
+        int positionStart = 0;
+        int maxArea = 0;
+        int positionEnd = height.length - 1;
+        while (positionStart < positionEnd) {
+            int area = 0;
+            if (height[positionStart] > height[positionEnd]) {
+                area = height[positionEnd] * (positionEnd - positionStart);
+                positionEnd--;
+            }
+            else{
+                area = height[positionStart] * (positionEnd - positionStart);
+                positionStart++;
+            }
+            if (area > maxArea) {
+                maxArea = area;
+            }
+        }
+        return maxArea;
     }
 }
