@@ -1,0 +1,51 @@
+/**
+ * Write a function to find the longest common prefix string amongst an array of strings.
+ *
+ * If there is no common prefix, return an empty string "".
+ */
+ 
+ class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs.length < 2) {
+            if (strs.length == 1) {
+                return strs[0];
+            }
+            return "";
+        } else {
+            StringBuffer longestStringBuffer = new StringBuffer(); // at first check the first and the second element
+            String[] split0 = strs[0].split("");
+            String[] split1 = strs[1].split("");
+            int min = Math.min(split0.length, split1.length);
+            for (int i = 0; i < min; i++) {
+                if (split0[i].equals(split1[i])) {
+                    longestStringBuffer.append(split0[i]);
+                } else {
+                    break;
+                }
+            }
+            if (longestStringBuffer.length() == 0) {
+                return "";
+            } else {
+                for (int i = 2; i < strs.length; i++) {
+                    String[] split = strs[i].split("");
+                    int min1 = Math.min(split.length, longestStringBuffer.length());
+                    int j = 0;
+                    while (j < min1 && j < longestStringBuffer.length()) {
+                        if (!split[j].equals(String.valueOf(longestStringBuffer.charAt(j)))) {
+                            longestStringBuffer.delete(j, longestStringBuffer.length());
+                        }
+                        if (longestStringBuffer.length() == 0) {
+                            return "";
+                        }
+                        j++;
+                    }
+                    if(longestStringBuffer.length()>min1){
+                        longestStringBuffer.delete(min1,longestStringBuffer.length());
+                    }
+                }
+                return longestStringBuffer.toString();
+            }
+
+        }
+    }
+}
