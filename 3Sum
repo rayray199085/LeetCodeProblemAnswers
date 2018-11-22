@@ -20,8 +20,12 @@
                     } else {
                         List<Integer> list = new ArrayList<>();
                         list.addAll(Arrays.asList(nums[i], nums[start], nums[end]));
-                        if (!listList.contains(list)) {
-                            listList.add(list);
+                        listList.add(list);
+                         while (start < end && nums[start] == nums[start + 1]) {
+                            start++;
+                        }
+                        while (start < end && nums[end] == nums[end - 1]) {
+                            end--;
                         }
                         start++;
                         end--;
@@ -31,4 +35,3 @@
         }
         return listList;
     }
-}
