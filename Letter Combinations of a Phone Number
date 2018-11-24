@@ -1,0 +1,57 @@
+/**
+ * Given a string containing digits from 2-9 inclusive,
+ * return all possible letter combinations that the number could represent.
+ *
+ * A mapping of digit to letters (just like on the telephone buttons)
+ * is given below. Note that 1 does not map to any letters.
+ */
+ 
+ class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> stringList = new ArrayList<>();
+        if("".equals(digits)) {
+            return stringList;
+        }
+        Map<String, String> map = initialMap();
+        String[] strings = digits.split("");
+        List<List<String>> listList = new ArrayList<>();
+        for (String s : strings) {
+            List<String> list = new ArrayList<>();
+            list.addAll(Arrays.asList(map.get(s).split("")));
+            listList.add(list);
+        }
+        if(listList.size()<2){
+            return listList.get(0);
+        }
+        List<String> removeList = listList.remove(0);
+        stringList = recursiveCombine(listList,removeList);
+        return stringList;
+    }
+
+    private List<String> recursiveCombine(List<List<String>> listList, List<String> stringList) {
+        if(listList.size()==0){
+            return stringList;
+        }
+        List<String> removeList = listList.remove(0);
+        List<String> combineList = new ArrayList<>();
+        for(String s: stringList){
+            for (String s1: removeList){
+                combineList.add(s+s1);
+            }
+        }
+        return recursiveCombine(listList,combineList);
+    }
+
+    private Map<String, String> initialMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("2", "abc");
+        map.put("3", "def");
+        map.put("4", "ghi");
+        map.put("5", "jkl");
+        map.put("6", "mno");
+        map.put("7", "pqrs");
+        map.put("8", "tuv");
+        map.put("9", "wxyz");
+        return map;
+    }
+}
