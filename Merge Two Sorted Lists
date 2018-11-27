@@ -1,0 +1,54 @@
+/**
+ * Merge two sorted linked lists and return it as a new list. 
+ * The new list should be made by splicing together the nodes of the first two lists.
+ *
+ * Example:
+ *
+ * Input: 1->2->4, 1->3->4
+ * Output: 1->1->2->3->4->4
+ */
+ 
+ /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+   public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        List<Integer> nodeValueList = new ArrayList<>();
+        getIntValue(l1,nodeValueList);
+        getIntValue(l2,nodeValueList);
+        if(nodeValueList.size()==0){
+            return null;
+        }
+        Collections.sort(nodeValueList);
+        ListNode newNode = new ListNode(nodeValueList.get(0));
+        nodeValueList.remove(0);
+        generateNewLinkedList(newNode,nodeValueList);
+        return newNode;
+    }
+
+    private void generateNewLinkedList(ListNode node, List<Integer> nodeValueList) {
+        if(nodeValueList.size()==0){
+            return;
+        }
+        else{
+            node.next = new ListNode(nodeValueList.get(0));
+            nodeValueList.remove(0);
+            generateNewLinkedList(node.next,nodeValueList);
+        }
+    }
+
+    private void getIntValue(ListNode l, List<Integer> nodeValueList) {
+        if (l==null){
+            return;
+        }
+        else{
+            nodeValueList.add(l.val);
+            getIntValue(l.next,nodeValueList);
+        }
+    }
+}
