@@ -1,0 +1,68 @@
+/**
+ * Given a linked list, swap every two adjacent nodes and return its head.
+ *
+ * Example:
+ *
+ * Given 1->2->3->4, you should return the list as 2->1->4->3.
+ * Note:
+ *
+ * Your algorithm should use only constant extra space.
+ * You may not modify the values in the list's nodes, only nodes itself may be changed.
+ */
+ 
+ /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public  ListNode swapPairs(ListNode head) {
+        if (head == null) {
+            return null;
+        } else if (head.next == null) {
+            return head;
+        }
+        List<Integer> nodeValueList = new ArrayList<>();
+        nodeValueList = getNodeValue(nodeValueList, head);
+        nodeValueList = swapValuesInPairs(nodeValueList);
+
+        ListNode newHeadNode = new ListNode(nodeValueList.get(0));
+        nodeValueList.remove(0);
+        return generateANewNodeList(newHeadNode, newHeadNode, nodeValueList);
+    }
+
+    private  ListNode generateANewNodeList(ListNode newHeadNode, ListNode currentNode, List<Integer> nodeValueList) {
+        if (nodeValueList.isEmpty()) {
+            return newHeadNode;
+        } else {
+            int nextValue = nodeValueList.get(0);
+            nodeValueList.remove(0);
+            ListNode nextNode = new ListNode(nextValue);
+            currentNode.next = nextNode;
+            return generateANewNodeList(newHeadNode, nextNode, nodeValueList);
+        }
+    }
+
+    private List<Integer> swapValuesInPairs(List<Integer> nodeValueList) {
+        int position = 0;
+        while (position < nodeValueList.size() - 1) {
+            int tempValues = nodeValueList.get(position);
+            nodeValueList.set(position, nodeValueList.get(position + 1));
+            nodeValueList.set(position + 1, tempValues);
+            position += 2;
+        }
+        return nodeValueList;
+    }
+
+    private List<Integer> getNodeValue(List<Integer> nodeValueList, ListNode head) {
+        if (head == null) {
+            return nodeValueList;
+        } else {
+            nodeValueList.add(head.val);
+            return getNodeValue(nodeValueList, head.next);
+        }
+    }
+}
