@@ -1,0 +1,77 @@
+/**
+ * Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+ *
+ * For example, given n = 3, a solution set is:
+ *
+ * [
+ *   "((()))",
+ *   "(()())",
+ *   "(())()",
+ *   "()(())",
+ *   "()()()"
+ * ]
+ */
+ 
+
+/**
+ * In this solution, I use '#' as a symbol to occupy a position for parenthesis to insert.
+ * 
+ * It will looks like #(#)
+ *                  #(#) #(#)
+ *                #(#) #(#) #(#)
+ *              #(#) #(#) #(#) #(#)
+ *                      .
+ *                      .
+ *                      .
+ * A tree structure.
+ * A recursive method to generate different numbers of parenthesis.
+ * When the number of open parenthesis exceeds the given number n, which will break the loop. And the recursion stops.
+ * I use a hash set to store the possibilities of appear parenthesis, because there is no need to keep searching in a 
+ * repeated parenthesis.
+ */
+ 
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> stringList = new ArrayList<>();
+        if (n == 1) {
+            stringList.add("()");
+            return stringList;
+        }
+        Set<String> stringSet = new HashSet<>();
+        Set<String> possibilitiesSet = new HashSet<>();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("#(#)");
+        recursiveGeneration(stringSet, n, n, stringBuffer, possibilitiesSet);
+        stringList.addAll(stringSet);
+        return stringList;
+    }
+
+
+    private void recursiveGeneration(Set<String> stringSet, int n, int originN, StringBuffer stringBuffer, Set<String> possibilitiesSet) {
+        for (int i = 0; i < stringBuffer.length(); i++) {
+            possibilitiesSet.add(stringBuffer.toString());
+            if ("#".equals(String.valueOf(stringBuffer.charAt(i)))) {
+                StringBuffer childBuffer = new StringBuffer();
+                childBuffer.append(stringBuffer.toString());
+                childBuffer.replace(i, i + 1, "#(#)");
+                if (!possibilitiesSet.contains(childBuffer.toString())) {
+                    possibilitiesSet.add(childBuffer.toString());
+                    int j = 0;
+                    String[] splits = childBuffer.toString().split("");
+                    for (String s : splits) {
+                        if ("(".equals(s)) {
+                            j++;
+                        }
+                    }
+                    if (j == originN) {
+                        stringSet.add(childBuffer.toString().replaceAll("#", ""));
+                    } else if (j > originN) {
+                        break;
+                    }
+                    recursiveGeneration(stringSet, --n, originN, childBuffer, possibilitiesSet);
+                }
+            }
+
+        }
+    }
+}
