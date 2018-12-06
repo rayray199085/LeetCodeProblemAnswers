@@ -1,0 +1,60 @@
+/**
+ * You are given a string, s, and a list of words, words, that are all of the same length. 
+ * Find all starting indices of substring(s) in s that is a concatenation of each word in words
+ * exactly once and without any intervening characters.
+ *
+ * Example 1:
+ *
+ * Input:
+ *   s = "barfoothefoobarman",
+ *   words = ["foo","bar"]
+ * Output: [0,9]
+ * Explanation: Substrings starting at index 0 and 9 are "barfoor" and "foobar" respectively.
+ * The output order does not matter, returning [9,0] is fine too.
+ * Example 2:
+ *
+ * Input:
+ *   s = "wordgoodstudentgoodword",
+ *   words = ["word","student"]
+ * Output: []
+ */
+ 
+ class Solution {
+     public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> integerList = new ArrayList<>();
+        if (words.length == 0) {
+            return integerList;
+        }
+        int wordLength = words[0].length();
+        for (String word : words) {
+            if (word.length() != wordLength) {
+                return integerList;
+            }
+        }
+        List<String> stringList = new ArrayList<>();
+        stringList.addAll(Arrays.asList(words));
+
+        int listSize = stringList.size();
+
+        for (int i = 0; i + listSize * wordLength <= s.length(); i++) {
+            String substring = s.substring(i, i + listSize * wordLength);
+            for (int j = 0; j + wordLength <= substring.length(); ) {
+                String childSubstring = substring.substring(j, j + wordLength);
+                if (stringList.contains(childSubstring)) {
+                    stringList.remove(childSubstring);
+                    if (stringList.isEmpty()) {
+                        integerList.add(i);
+                        stringList.addAll(Arrays.asList(words));
+                    }
+                } else {
+                    stringList.clear();
+                    stringList.addAll(Arrays.asList(words));
+                    break;
+                }
+                j += wordLength;
+
+            }
+        }
+        return integerList;
+    }
+}
