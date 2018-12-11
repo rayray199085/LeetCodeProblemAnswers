@@ -1,0 +1,69 @@
+/**
+ * Determine if a 9x9 Sudoku board is valid. Only the filled cells need 
+ * 
+ * to be validated according to the following rules:
+ *
+ * Each row must contain the digits 1-9 without repetition.
+ * 
+ * Each column must contain the digits 1-9 without repetition.
+ * 
+ * Each of the 9 3x3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+ */
+ 
+class Solution {
+     public boolean isValidSudoku(char[][] board) {
+        // check the horizontal direction
+        for (int i = 0; i < board.length; i++) {
+            Set<Character> rowSet = new HashSet<>();
+            for (int j = 0; j < board[i].length; j++) {
+                if (!".".equals(String.valueOf(board[i][j]))) {
+                    boolean add = rowSet.add(board[i][j]);
+                    if (!add) {
+                        return false;
+                    }
+                }
+
+            }
+        }
+        // check the vertical direction
+        for (int j = 0; j < 9; j++) {
+            Set<Character> columnSet = new HashSet<>();
+            for (int i = 0; i < 9; i++) {
+                if (!".".equals(String.valueOf(board[i][j]))) {
+                    boolean add = columnSet.add(board[i][j]);
+                    if (!add) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // check 3 x 3 sub-box
+        for (int i = 0; i < 9; ) {
+            for (int j = 0; j < 9; ) {
+                Set<Character> subBoxSet = new HashSet<>();
+                boolean isValid = findSubBox(i,j,subBoxSet,board);
+                if(!isValid){
+                    return false;
+                }
+                j += 3;
+            }
+            i += 3;
+        }
+        return true;
+    }
+
+    private boolean findSubBox(int row, int column, Set<Character> subBoxSet, char[][] board) {
+        for(int i = row; i < row + 3; i++){
+            for(int j = column; j < column + 3; j++){
+                if (!".".equals(String.valueOf(board[i][j]))) {
+                    boolean add = subBoxSet.add(board[i][j]);
+                    if (!add) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
