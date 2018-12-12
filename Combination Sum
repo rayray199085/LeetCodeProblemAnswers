@@ -1,0 +1,89 @@
+/**
+ * iven a set of candidate numbers (candidates) (without duplicates) and a target number (target), 
+ * 
+ * find all unique combinations in candidates where the candidate numbers sums to target.
+ *
+ * The same repeated number may be chosen from candidates unlimited number of times.
+ *
+ * Note:
+ *
+ * All numbers (including target) will be positive integers.
+ * The solution set must not contain duplicate combinations.
+ * Example 1:
+ *
+ * Input: candidates = [2,3,6,7], target = 7,
+ * A solution set is:
+ * [
+ *   [7],
+ *   [2,2,3]
+ * ]
+ * Example 2:
+ *
+ * Input: candidates = [2,3,5], target = 8,
+ * A solution set is:
+ * [
+ *   [2,2,2,2],
+ *   [2,3,3],
+ *   [3,5]
+ * ]
+ */
+ 
+ class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Set<List<Integer>> setList = new HashSet<>();
+        List<List<Integer>> listList = new ArrayList<>();
+        if (candidates.length == 0) {
+            return listList;
+        }
+        // sort it first for constructing a tree structure
+        Arrays.sort(candidates);
+        // height of tree
+        int height = target / candidates[0];
+        List<Integer> integerList = null;
+        treeSearch(candidates, height, integerList, true, target, setList,0);
+        for(List<Integer> list : setList){
+            System.out.println(list);
+        }
+        listList.addAll(setList);
+        return listList;
+    }
+
+    private void treeSearch(int[] candidates, int height, List<Integer> integerList,
+                                   boolean isFirstTime, int target, Set<List<Integer>> setList,int pos) {
+        for (int i = pos; i < candidates.length; i++) {
+            int newHeight = height - 1;
+            if (isFirstTime) {
+                integerList = new ArrayList<>();
+            }
+            int listSum = getListSum(integerList);
+            if (listSum + candidates[i] == target) {
+                List<Integer> newList = new ArrayList<>();
+                newList.addAll(integerList);
+                newList.add(candidates[i]);
+                Collections.sort(newList);
+                setList.add(newList);
+                return;
+            }
+            else if (listSum + candidates[i] > target){
+                return;
+            }
+            else {
+                integerList.add(candidates[i]);
+            }
+            if (newHeight >= 0) {
+                treeSearch(candidates, newHeight, integerList,false,target, setList, pos);
+                integerList.remove(integerList.size()-1);
+            } else {
+                return;
+            }
+        }
+    }
+
+    public int getListSum(List<Integer> integerList) {
+        int sum = 0;
+        for (int i = 0; i < integerList.size(); i++) {
+            sum += integerList.get(i);
+        }
+        return sum;
+    }
+}
