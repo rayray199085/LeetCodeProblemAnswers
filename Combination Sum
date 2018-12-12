@@ -40,7 +40,7 @@
         // height of tree
         int height = target / candidates[0];
         List<Integer> integerList = null;
-        treeSearch(candidates, height, integerList, true, target, setList,0);
+        treeSearch(candidates, height, integerList, true, target, setList);
         for(List<Integer> list : setList){
             System.out.println(list);
         }
@@ -49,8 +49,8 @@
     }
 
     private void treeSearch(int[] candidates, int height, List<Integer> integerList,
-                                   boolean isFirstTime, int target, Set<List<Integer>> setList,int pos) {
-        for (int i = pos; i < candidates.length; i++) {
+                                   boolean isFirstTime, int target, Set<List<Integer>> setList) {
+        for (int i = 0; i < candidates.length; i++) {
             int newHeight = height - 1;
             if (isFirstTime) {
                 integerList = new ArrayList<>();
@@ -71,7 +71,7 @@
                 integerList.add(candidates[i]);
             }
             if (newHeight >= 0) {
-                treeSearch(candidates, newHeight, integerList,false,target, setList, pos);
+                treeSearch(candidates, newHeight, integerList,false,target, setList);
                 integerList.remove(integerList.size()-1);
             } else {
                 return;
