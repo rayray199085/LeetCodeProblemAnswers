@@ -1,0 +1,73 @@
+/**
+ * Given n non-negative integers representing an elevation map 
+ * 
+ * where the width of each bar is 1, compute 
+ * 
+ * how much water it is able to trap after raining.
+ */
+ 
+ class Solution {
+     public int trap(int[] height) {
+        if (height.length == 0) {
+            return 0;
+        }
+        int totalSize = 0;
+        int left = 0;
+        int right = height.length - 1;
+        int[] positions = new int[2];
+        findTwoHighestBars(left,right,height,positions);
+        if(height[positions[0]] == 0 || height[positions[1]] == 0){
+            return 0;
+        }
+        totalSize = recursiveCalculateTotalSize(totalSize, height, left, right);
+        return totalSize;
+    }
+
+    private int recursiveCalculateTotalSize(int totalSize, int[] height, int left, int right) {
+        if(left>=right){
+            return 0;
+        }
+        int[] positions = new int[2];
+        positions = findTwoHighestBars(left, right, height, positions);
+        return calculateSizeInBetween(positions[0], positions[1], height) +
+                recursiveCalculateTotalSize(totalSize,height,left,positions[0]) +
+                recursiveCalculateTotalSize(totalSize,height,positions[1],right);
+
+    }
+
+    private int calculateSizeInBetween(int left, int right, int[] height) {
+        int minHeight = Math.min(height[left], height[right]);
+        if (right - left < 2) {
+            return 0;
+        } else {
+            int blockSize = 0;
+            for (int i = left + 1; i < right; i++) {
+                blockSize += height[i];
+            }
+            int realSize = minHeight * (right - left - 1) - blockSize;
+            return realSize;
+        }
+    }
+
+    private int[] findTwoHighestBars(int left, int right, int[] height, int[] positions) {
+        int highestBar = 0;
+        positions[0] = searchHighestBarPosition(height, highestBar, left, right, false, 0);
+        positions[1] = searchHighestBarPosition(height, highestBar, left, right, true, positions[0]);
+        Arrays.sort(positions);
+        return positions;
+    }
+
+    private int searchHighestBarPosition(int[] height, int highestBar, int left, int right, boolean isSecondHighest, int position1) {
+        int position = 0;
+        for (int i = left; i <= right; i++) {
+            if (isSecondHighest && i == position1) {
+                continue;
+            } else if (height[i] >= highestBar) {
+                highestBar = height[i];
+                position = i;
+            }
+        }
+        return position;
+    }
+
+}
