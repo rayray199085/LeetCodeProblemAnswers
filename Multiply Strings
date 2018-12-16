@@ -1,0 +1,81 @@
+/**
+ * Given two non-negative integers num1 and num2 represented as strings, 
+ * 
+ * return the product of num1 and num2, also represented as a string.
+ *
+ * Example 1:
+ *
+ * Input: num1 = "2", num2 = "3"
+ * 
+ * Output: "6"
+ * 
+ * Example 2:
+ *
+ * Input: num1 = "123", num2 = "456"
+ * 
+ * Output: "56088"
+ * 
+ * Note:
+ *
+ * The length of both num1 and num2 is < 110.
+ * 
+ * Both num1 and num2 contain only digits 0-9.
+ * 
+ * Both num1 and num2 do not contain any leading zero, except the number 0 itself.
+ * 
+ * You must not use any built-in BigInteger library or convert the inputs to integer directly.
+ */
+ 
+ class Solution {
+    public String multiply(String num1, String num2) {
+        if(num1.length()==0 || num2.length()==0){
+            return "";
+        }
+        String regex = "0\\d*";
+        if(num1.matches(regex) || num2.matches(regex)){
+            return "0";
+        }
+        int[] nums = new int[Math.max(num1.length(), num2.length()) * 2 + 1];
+        int loopTime = 0;
+        for (int i = num2.length() - 1; i > -1; i--) {
+            int counter = 0;
+            int factor1 = Integer.valueOf(String.valueOf(num2.charAt(i)));
+            for (int j = num1.length() - 1; j > -1; j--) {
+                int factor2 = Integer.valueOf(String.valueOf(num1.charAt(j)));
+                nums[nums.length - 1 - counter - loopTime] += factor1 * factor2;
+                counter++;
+            }
+            loopTime++;
+        }
+        int totalPosition = 0;
+        boolean isStaringZero = true;
+        for(int i: nums){
+            if(i!=0){
+                isStaringZero = false;
+            }
+            if(!isStaringZero){
+                totalPosition++;
+            }
+        }
+        for (int i = nums.length - 1; i > -1; i--) {
+            if (i==nums.length-totalPosition) {
+                break;
+            }
+            int remainder = nums[i] % 10;
+            int forward = nums[i] / 10;
+            nums[i] = remainder;
+            nums[i - 1] += forward;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        boolean isStartWithZero = true;
+        for (int num : nums) {
+            if (num != 0) {
+                isStartWithZero = false;
+            }
+            if (!isStartWithZero) {
+                stringBuffer.append(num);
+            }
+        }
+        return stringBuffer.toString();
+    }
+}
