@@ -1,0 +1,55 @@
+/**
+ * Given an array of non-negative integers, you are initially positioned at the first index of the array.
+ *
+ * Each element in the array represents your maximum jump length at that position.
+ *
+ * Your goal is to reach the last index in the minimum number of jumps.
+ *
+ * Example:
+ *
+ * Input: [2,3,1,1,4]
+ * Output: 2
+ * Explanation: The minimum number of jumps to reach the last index is 2.
+ *     Jump 1 step from index 0 to 1, then 3 steps to the last index.
+ */
+ 
+ class Solution {
+       public int jump(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+        int[] minimumStep = new int[]{Integer.MAX_VALUE};
+        int hasMoveCount = 0;
+        Map<Integer, Integer> stepMap = new HashMap<>();
+        moveForward(nums, hasMoveCount, minimumStep, 0, stepMap);
+        return minimumStep[0];
+    }
+
+    private void moveForward(int[] nums, int hasMoveCount, int[] minimumStep, int currentPosition, Map<Integer, Integer> stepMap) {
+        if (currentPosition == nums.length - 1) {
+            if (hasMoveCount < minimumStep[0]) {
+                minimumStep[0] = hasMoveCount;
+            }
+            return;
+        } else if (currentPosition > nums.length - 1) {
+            return;
+
+        }
+        for (int i = nums[currentPosition]; i > 0; i--) {
+            if (hasMoveCount > minimumStep[0]) {
+                return;
+            }
+            if (stepMap.get(currentPosition) == null) {
+                stepMap.put(currentPosition, hasMoveCount);
+            } else {
+                if (hasMoveCount > stepMap.get(currentPosition)) {
+                    return;
+                } else if (hasMoveCount < stepMap.get(currentPosition)) {
+                    stepMap.put(currentPosition, hasMoveCount);
+                }
+            }
+            moveForward(nums, ++hasMoveCount, minimumStep, currentPosition + i, stepMap);
+            hasMoveCount--;
+        }
+    }
+}
