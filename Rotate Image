@@ -1,0 +1,76 @@
+/**
+ * You are given an n x n 2D matrix representing an image.
+ *
+ * Rotate the image by 90 degrees (clockwise).
+ *
+ * Note:
+ *
+ * You have to rotate the image in-place, which means you have to modify the input 2D matrix directly. DO NOT allocate another 2D matrix and do the rotation.
+ *
+ * Example 1:
+ *
+ * Given input matrix = 
+ * [
+ *   [1,2,3],
+ *   [4,5,6],
+ *   [7,8,9]
+ * ],
+ *
+ * rotate the input matrix in-place such that it becomes:
+ * [
+ *   [7,4,1],
+ *   [8,5,2],
+ *   [9,6,3]
+ * ]
+ * Example 2:
+ *
+ * Given input matrix =
+ * [
+ *   [ 5, 1, 9,11],
+ *   [ 2, 4, 8,10],
+ *   [13, 3, 6, 7],
+ *   [15,14,12,16]
+ * ], 
+ *
+ * rotate the input matrix in-place such that it becomes:
+ * [
+ *   [15,13, 2, 5],
+ *   [14, 3, 4, 1],
+ *   [12, 6, 8, 9],
+ *   [16, 7,10,11]
+ * ]
+ */
+ 
+ class Solution {
+    public void rotate(int[][] matrix) {
+       if(matrix.length==0){
+           return;
+       }
+        int[] rowArray = new int[matrix.length];
+        int[] columnArray = new int[matrix[0].length];
+        for (int row = 0; row < matrix.length; row++) {
+            for (int column = 0; column < matrix[0].length; column++) {
+                if (columnArray[column] != 1 || rowArray[row] != 1) {
+                    int temp = matrix[row][column];
+                    matrix[row][column] = matrix[column][row];
+                    matrix[column][row] = temp;
+                    columnArray[row] = 1;
+                    rowArray[column] = 1;
+                }
+            }
+        }
+        int start = 0;
+        int end = matrix[0].length - 1;
+        for (int i = 0; i < matrix.length; i++) {
+            while (start < end) {
+                int temp = matrix[i][start];
+                matrix[i][start] = matrix[i][end];
+                matrix[i][end] = temp;
+                start++;
+                end--;
+            }
+            start = 0;
+            end = matrix.length - 1;
+        }
+    }
+}
