@@ -1,0 +1,46 @@
+/**
+ * Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+ *
+ * Example:
+ *
+ * Input: [1,1,2]
+ * Output:
+ * [
+ *   [1,1,2],
+ *   [1,2,1],
+ *   [2,1,1]
+ * ]
+ */
+ 
+ 
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> listList = new ArrayList<>();
+        if (nums.length == 0) {
+            return listList;
+        }
+        List<Integer> indexList = new ArrayList<>();
+        Set<List<Integer>> listSet = new HashSet<>();
+        generatePermuteUnique(listSet, nums, indexList);
+        listList.addAll(listSet);
+        return listList;
+    }
+
+    private void generatePermuteUnique(Set<List<Integer>> listSet, int[] nums, List<Integer> indexList) {
+        if (indexList.size() == nums.length) {
+            List<Integer> integerList = new ArrayList<>();
+            for (int index : indexList) {
+                integerList.add(nums[index]);
+            }
+            listSet.add(integerList);
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (!indexList.contains(i)) {
+                indexList.add(i);
+                generatePermuteUnique(listSet, nums, indexList);
+                indexList.remove(indexList.size() - 1);
+            }
+        }
+    }
+}
