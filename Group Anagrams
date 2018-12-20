@@ -1,0 +1,81 @@
+/**
+ * Given an array of strings, group anagrams together.
+ *
+ * Example:
+ *
+ * Input: ["eat", "tea", "tan", "ate", "nat", "bat"],
+ * Output:
+ * [
+ *   ["ate","eat","tea"],
+ *   ["nat","tan"],
+ *   ["bat"]
+ * ]
+ */
+class Solution {
+  
+   public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> listList = new ArrayList<>();
+        if (strs.length == 0) {
+            return listList;
+        }
+        generateGroupAnarams(listList, strs);
+        return listList;
+    }
+    private void generateGroupAnarams(List<List<String>> listList, String[] strs) {
+        for (String string : strs) {
+            if (listList.size() == 0) {
+                listList.add(createNewList(string));
+            } else {
+                boolean shouldCreateNewList = true;
+                for (int i = 0; i < listList.size(); i++) {
+                    String word = listList.get(i).get(0);
+                    boolean isCorrect = compareTwoWords(string, word);
+                    if (isCorrect) {
+                        listList.get(i).add(string);
+                        shouldCreateNewList = false;
+                        break;
+                    }
+                }
+                if (shouldCreateNewList) {
+                    listList.add(createNewList(string));
+                }
+            }
+        }
+    }
+
+    private List<String> createNewList(String string) {
+        List<String> stringList = new ArrayList<>();
+        stringList.add(string);
+        return stringList;
+    }
+
+    private boolean compareTwoWords(String string, String word) {
+        if (string.equals(word)) {
+            return true;
+        }
+        if (word.length() != string.length()) {
+            return false;
+        }
+        int max = Math.max(word.length(), string.length());
+        if(word.length()==max){
+            for(int i=0;i<word.length();i++){
+                if (!string.contains(String.valueOf(word.charAt(i)))){
+                    return false;
+                }
+            }
+        }
+        else {
+            for(int i=0;i<string.length();i++){
+                if (!word.contains(String.valueOf(string.charAt(i)))){
+                    return false;
+                }
+            }
+        }
+        String[] strings = string.split("");
+        String[] words = word.split("");
+        Arrays.sort(strings);
+        Arrays.sort(words);
+        return Arrays.equals(strings, words);
+    }
+
+}
