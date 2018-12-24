@@ -1,0 +1,43 @@
+/**
+ * The n-queens puzzle is the problem of placing n queens on 
+ * 
+ * an n×n chessboard such that no two queens attack each other.
+ *
+ * Given an integer n, return the number of distinct solutions to the n-queens puzzle.
+ */
+ class Solution {
+    public int totalNQueens(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        int[] record = new int[1];
+        findValidPosition(record, new int[n], 0);
+        return record[0];
+    }
+
+    private void findValidPosition(int[] record, int[] queens, int pos) {
+        if(pos == queens.length){
+            record[0] += 1;
+            return;
+        }
+
+        for (int i = 0; i < queens.length; i++) {
+            queens[pos] = i;
+            if(isPositionValid(queens, pos)){
+                findValidPosition(record,queens,pos+1);
+            }
+        }
+    }
+
+    private boolean isPositionValid(int[] queens, int pos) {
+        for (int i = 0; i < pos; i++) {
+            if (queens[pos] == queens[i]) {
+                return false;
+            }
+            if (Math.abs(queens[pos] - queens[i]) == Math.abs(pos - i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
