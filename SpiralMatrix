@@ -1,0 +1,105 @@
+/**
+ * Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+ *
+ * Example 1:
+ *
+ * Input:
+ * [
+ *  [ 1, 2, 3 ],
+ *  [ 4, 5, 6 ],
+ *  [ 7, 8, 9 ]
+ * ]
+ * Output: [1,2,3,6,9,8,7,4,5]
+ * Example 2:
+ *
+ * Input:
+ * [
+ *   [1, 2, 3, 4],
+ *   [5, 6, 7, 8],
+ *   [9,10,11,12]
+ * ]
+ * Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+ */
+ 
+class Solution {
+    public static List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> integerList = new ArrayList<>();
+        if (matrix.length == 0) {
+            return integerList;
+        }
+        int[] currentPos = new int[2];
+        walkThroughAllPositions(currentPos, matrix, integerList);
+        return integerList;
+    }
+
+    private static void walkThroughAllPositions(int[] currentPos, int[][] matrix, List<Integer> integerList) {
+        if (integerList.size() == matrix.length * matrix[0].length) {
+            return;
+        }
+        walkToRight(integerList, currentPos, matrix);
+        currentPos[0] += 1;
+        walkToBottom(integerList, currentPos, matrix);
+        currentPos[1] -= 1;
+        walkToLeft(integerList, currentPos, matrix);
+        currentPos[0] -= 1;
+        walkToTop(integerList, currentPos, matrix);
+        currentPos[1] += 1;
+        walkThroughAllPositions(currentPos, matrix, integerList);
+    }
+
+    private static void walkToRight(List<Integer> integerList, int[] currentPos, int[][] matrix) {
+        for (int i = currentPos[1]; i < matrix[currentPos[0]].length; i++) {
+            if (!integerList.contains(matrix[currentPos[0]][i])) {
+                integerList.add(matrix[currentPos[0]][i]);
+            } else {
+                if (currentPos[1] > 0) {
+                    currentPos[1] = i - 1;
+                }
+                return;
+            }
+        }
+        currentPos[1] = matrix[currentPos[0]].length - 1;
+    }
+
+    private static void walkToBottom(List<Integer> integerList, int[] currentPos, int[][] matrix) {
+        for (int i = currentPos[0]; i < matrix.length; i++) {
+            if (!integerList.contains(matrix[i][currentPos[1]])) {
+                integerList.add(matrix[i][currentPos[1]]);
+            } else {
+                if (currentPos[0] > 0) {
+                    currentPos[0] = i - 1;
+                }
+                return;
+            }
+        }
+        currentPos[0] = matrix.length - 1;
+    }
+
+    private static void walkToLeft(List<Integer> integerList, int[] currentPos, int[][] matrix) {
+        for (int i = currentPos[1]; i > -1; i--) {
+            if (!integerList.contains(matrix[currentPos[0]][i])) {
+                integerList.add(matrix[currentPos[0]][i]);
+            } else {
+                if (currentPos[1] > 0) {
+                    currentPos[1] = i + 1;
+                }
+                return;
+            }
+        }
+        currentPos[1] = 0;
+    }
+
+    private static void walkToTop(List<Integer> integerList, int[] currentPos, int[][] matrix) {
+        for (int i = currentPos[0]; i > -1; i--) {
+            if (!integerList.contains(matrix[i][currentPos[1]])) {
+                integerList.add(matrix[i][currentPos[1]]);
+            } else {
+                if (currentPos[0] > 0) {
+                    currentPos[0] = i + 1;
+                }
+                return;
+            }
+        }
+        currentPos[0] = 0;
+    }
+}
