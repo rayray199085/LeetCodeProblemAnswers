@@ -1,0 +1,86 @@
+/**
+ * The set [1,2,3,...,n] contains a total of n! unique permutations.
+ *
+ * By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+ *
+ * "123"
+ * "132"
+ * "213"
+ * "231"
+ * "312"
+ * "321"
+ * Given n and k, return the kth permutation sequence.
+ *
+ * Note:
+ *
+ * Given n will be between 1 and 9 inclusive.
+ * Given k will be between 1 and n! inclusive.
+ */
+ 
+class Solution {
+    public static String getPermutation(int n, int k) {
+        if (n == 0) {
+            return "";
+        }
+        if (n == 1) {
+            return "1";
+        }
+        if (k < 1) {
+            return "";
+        }
+        int sum = 1;
+        sum = calculationTheCount(sum, n);
+        String template = generateTemplate(n);
+        List<String> stringList = new ArrayList<>();
+        int [] targetPosition = new int[]{k-1};
+        if(k > sum/2){
+           template =  reverse(template);
+           targetPosition[0] = sum - k;
+        }
+        getAllSequence(stringList, template, new StringBuilder(), n, targetPosition);
+        return stringList.get(stringList.size()-1);
+    }
+
+    private static String reverse(String template) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = template.length(); i>0;i--){
+            stringBuilder.append(String.valueOf(i));
+        }
+        return stringBuilder.toString();
+    }
+
+    private static int calculationTheCount(int sum, int n) {
+        if(n==1){
+            return sum;
+        }
+        sum *= n;
+        return calculationTheCount(sum,n-1);
+    }
+
+    private static void getAllSequence(List<String> stringList, String template, StringBuilder stringBuilder, int n, int[] targetPosition) {
+        if (stringBuilder.length() == n) {
+            stringList.add(stringBuilder.toString());
+            targetPosition[0]--;
+            return;
+        }
+        for (int i = 0; i < template.length(); i++) {
+            String character = String.valueOf(template.charAt(i));
+            if (!stringBuilder.toString().contains(character) && targetPosition[0]>-1) {
+                stringBuilder.append(character);
+                getAllSequence(stringList, template, stringBuilder, n, targetPosition);
+                stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+            }
+            if(targetPosition[0]<0){
+                return;
+            }
+        }
+    }
+
+    private static String generateTemplate(int n) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i <= n; i++) {
+            stringBuilder.append(String.valueOf(i));
+        }
+        return stringBuilder.toString();
+    }
+}
