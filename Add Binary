@@ -1,0 +1,76 @@
+/**
+ * Given two binary strings, return their sum (also a binary string).
+ *
+ * The input strings are both non-empty and contains only characters 1 or 0.
+ *
+ * Example 1:
+ *
+ * Input: a = "11", b = "1"
+ * Output: "100"
+ * Example 2:
+ *
+ * Input: a = "1010", b = "1011"
+ * Output: "10101"
+ */
+ 
+class Solution {
+      public static String addBinary(String a, String b) {
+        int[] arrayA = convertString2Array(a);
+        int[] arrayB = convertString2Array(b);
+        int[] longerArray = null;
+        int[] shorterArray = null;
+        if (arrayA.length >= arrayB.length) {
+            longerArray = arrayA;
+            shorterArray = arrayB;
+        } else {
+            longerArray = arrayB;
+            shorterArray = arrayA;
+        }
+        int indexOfShort = shorterArray.length - 1;
+        int indexOfLong = longerArray.length - 1;
+        while (indexOfShort > -1) {
+            int tempSum = shorterArray[indexOfShort] + longerArray[indexOfLong];
+            if (tempSum < 2) {
+                longerArray[indexOfLong] = tempSum;
+            } else if (tempSum == 2) {
+                longerArray[indexOfLong] = 0;
+                longerArray[indexOfLong - 1] += 1;
+            } else if (tempSum == 3) {
+                longerArray[indexOfLong] = 1;
+                longerArray[indexOfLong - 1] += 1;
+            }
+            indexOfLong--;
+            indexOfShort--;
+        }
+        handleRemainingTwo(longerArray, indexOfLong);
+        int startIndex = 0;
+        if (longerArray[0] == 0) {
+            startIndex = 1;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = startIndex; i < longerArray.length; i++) {
+            stringBuilder.append(longerArray[i]);
+        }
+        return stringBuilder.toString();
+    }
+
+    private static void handleRemainingTwo(int[] longerArray, int indexOfLong) {
+        if (indexOfLong <= 0 || longerArray[indexOfLong] < 2) {
+            return;
+        }
+        if (longerArray[indexOfLong] == 2) {
+            longerArray[indexOfLong] = 0;
+            longerArray[indexOfLong - 1] += 1;
+        }
+        handleRemainingTwo(longerArray, indexOfLong - 1);
+    }
+
+    private static int[] convertString2Array(String string) {
+        int size = string.length() + 1;
+        int[] digits = new int[size];
+        for (int i = string.length() - 1; i > -1; i--) {
+            digits[i + 1] = Integer.valueOf(String.valueOf(string.charAt(i)));
+        }
+        return digits;
+    }
+}
