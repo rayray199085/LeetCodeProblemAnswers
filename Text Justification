@@ -1,0 +1,147 @@
+/**
+ * Given an array of words and a width maxWidth, format the text such that each line has 
+ * 
+ * exactly maxWidth characters and is fully (left and right) justified.
+ *
+ * You should pack your words in a greedy approach; that is, pack as many words as you can 
+ * 
+ * in each line. Pad extra spaces ' ' when necessary so that each line has exactly maxWidth characters.
+ *
+ * Extra spaces between words should be distributed as evenly as possible. If the number of spaces 
+ * 
+ * on a line do not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
+ *
+ * For the last line of text, it should be left justified and no extra space is inserted between words.
+ *
+ * Note:
+ *
+ * A word is defined as a character sequence consisting of non-space characters only.
+ * Each word's length is guaranteed to be greater than 0 and not exceed maxWidth.
+ * The input array words contains at least one word.
+ * Example 1:
+ *
+ * Input:
+ * words = ["This", "is", "an", "example", "of", "text", "justification."]
+ * maxWidth = 16
+ * Output:
+ * [
+ *    "This    is    an",
+ *    "example  of text",
+ *    "justification.  "
+ * ]
+ * Example 2:
+ *
+ * Input:
+ * words = ["What","must","be","acknowledgment","shall","be"]
+ * maxWidth = 16
+ * Output:
+ * [
+ *   "What   must   be",
+ *   "acknowledgment  ",
+ *   "shall be        "
+ * ]
+ * Explanation: Note that the last line is "shall be    " instead of "shall     be",
+ *              because the last line must be left-justified instead of fully-justified.
+ *              Note that the second line is also left-justified becase it contains only one word.
+ * Example 3:
+ *
+ * Input:
+ * words = ["Science","is","what","we","understand","well","enough","to","explain",
+ *          "to","a","computer.","Art","is","everything","else","we","do"]
+ * maxWidth = 20
+ * Output:
+ * [
+ *   "Science  is  what we",
+ *   "understand      well",
+ *   "enough to explain to",
+ *   "a  computer.  Art is",
+ *   "everything  else  we",
+ *   "do                  "
+ * ]
+ */
+ 
+ class Solution {
+    public static List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> stringList = new ArrayList<>();
+        int[] wordsLength = new int[words.length];
+        for (int i = 0; i < wordsLength.length; i++) {
+            wordsLength[i] = words[i].length();
+        }
+        int currentPosition = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        while (currentPosition < words.length) {
+            currentPosition = findMaxWords(stringBuilder, currentPosition, maxWidth, words, wordsLength);
+            stringList.add(stringBuilder.toString());
+            stringBuilder.delete(0, stringBuilder.length());
+        }
+        // remove space from the 0 - n-2 elements in the list
+        for (int i = 0; i < stringList.size() - 1; i++) {
+            if (stringList.get(i).endsWith(" ")) {
+                stringList.set(i, stringList.get(i).substring(0, stringList.get(i).length() - 1));
+            }
+        }
+        for (int i = 0; i < stringList.size() - 1; i++) {
+            if (stringList.get(i).length() < maxWidth && stringList.get(i).contains(" ")) {
+                String newWord = addSpaceEvenly2Word(stringList.get(i), maxWidth);
+                stringList.set(i, newWord);
+            }
+            else if(!stringList.get(i).contains(" ")){
+                handleSingleWordOrLastWord(stringList,i,maxWidth);
+            }
+        }
+        if(stringList.get(stringList.size()-1).length()<maxWidth){
+            handleSingleWordOrLastWord(stringList,stringList.size()-1,maxWidth);
+        }
+        return stringList;
+    }
+    private static void handleSingleWordOrLastWord(List<String> stringList, int index, int maxWidth){
+        StringBuilder sb = new StringBuilder();
+        sb.append(stringList.get(index));
+        while(sb.length()<maxWidth){
+            sb.append(" ");
+        }
+        stringList.set(index, sb.toString());
+    }
+
+    private static String addSpaceEvenly2Word(String currentWord, int maxWidth) {
+        int size = currentWord.length();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(currentWord);
+        int position = 0;
+        int offset = 1;
+        while (size < maxWidth) {
+            if (" ".equals(String.valueOf(stringBuilder.charAt(position)))) {
+                stringBuilder.insert(position, " ");
+                size++;
+                if (size == maxWidth) {
+                    break;
+                }
+                position += offset;
+            }
+            if (position >= size - 1) {
+                position = -1;
+                offset++;
+            }
+            position++;
+        }
+        return stringBuilder.toString();
+    }
+
+    private static int findMaxWords(StringBuilder stringBuilder, int currentPosition, int maxWidth, String[] words, int[] wordsLength) {
+        if (currentPosition < words.length && (maxWidth - wordsLength[currentPosition] == 0
+                || (currentPosition == words.length - 1 && maxWidth - wordsLength[currentPosition] >= 0))) {
+            stringBuilder.append(words[currentPosition]);
+            maxWidth -= wordsLength[currentPosition];
+            currentPosition++;
+            return findMaxWords(stringBuilder, currentPosition, maxWidth, words, wordsLength);
+        } else if (currentPosition < words.length && maxWidth - wordsLength[currentPosition] - 1 >= 0) {
+            stringBuilder.append(words[currentPosition]);
+            stringBuilder.append(" ");
+            maxWidth -= wordsLength[currentPosition] + 1;
+            currentPosition++;
+            return findMaxWords(stringBuilder, currentPosition, maxWidth, words, wordsLength);
+        } else {
+            return currentPosition;
+        }
+    }
+}
