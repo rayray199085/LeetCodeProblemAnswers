@@ -1,0 +1,61 @@
+/**
+ * Given a m x n matrix, if an element is 0, 
+ * 
+ * set its entire row and column to 0. Do it in-place.
+ *
+ * Example 1:
+ *
+ * Input: 
+ * [
+ *   [1,1,1],
+ *   [1,0,1],
+ *   [1,1,1]
+ * ]
+ * Output: 
+ * [
+ *   [1,0,1],
+ *   [0,0,0],
+ *   [1,0,1]
+ * ]
+ * Example 2:
+ *
+ * Input: 
+ * [
+ *   [0,1,2,0],
+ *   [3,4,5,2],
+ *   [1,3,1,5]
+ * ]
+ * Output: 
+ * [
+ *   [0,0,0,0],
+ *   [0,4,5,0],
+ *   [0,3,1,0]
+ * ]
+ */
+ 
+class Solution {
+    public static void setZeroes(int[][] matrix) {
+        int[] zeroPosition;
+        List<int[]> positions = new ArrayList<>();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] == 0) {
+                    zeroPosition = new int[]{i, j};
+                    positions.add(zeroPosition);
+                }
+            }
+        }
+        for (int[] index : positions) {
+            setRowAndColumnZeros(index, matrix);
+        }
+    }
+
+    private static void setRowAndColumnZeros(int[] index, int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i][index[1]] = 0;
+        }
+        for (int j = 0; j < matrix[0].length; j++) {
+            matrix[index[0]][j] = 0;
+        }
+    }
+}
