@@ -1,0 +1,63 @@
+/**
+ * Given a sorted linked list, delete all nodes that have duplicate numbers, 
+ * 
+ * leaving only distinct numbers from the original list.
+ *
+ * Example 1:
+ *
+ * Input: 1->2->3->3->4->4->5
+ * Output: 1->2->5
+ * Example 2:
+ *
+ * Input: 1->1->1->2->3
+ * Output: 2->3
+ */
+ 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode node = null;
+        if (head == null) {
+            return node;
+        }
+        Set<Integer> set = new HashSet<>();
+        List<Integer> valueList = new ArrayList<>();
+        List<Integer> duplicateList = new ArrayList<>();
+        getAllUniqueValues(head, set, valueList,duplicateList);
+        valueList.removeAll(duplicateList);
+        if(valueList.size()==0){
+            return node;
+        }
+        node = new ListNode(valueList.remove(0));
+        generateNewListNode(valueList,node);
+        return node;
+    }
+
+    private void generateNewListNode(List<Integer> valueList, ListNode currentNode) {
+        if(valueList.size()==0){
+            return;
+        }
+        ListNode nextNode = new ListNode(valueList.remove(0));
+        currentNode.next = nextNode;
+        generateNewListNode(valueList,nextNode);
+    }
+
+    private void getAllUniqueValues(ListNode head, Set<Integer> set, List<Integer> valueList,List<Integer> duplicateList) {
+        if (head == null) {
+            return;
+        }
+        if (set.add(head.val)) {
+            valueList.add(head.val);
+        }else {
+            duplicateList.add(head.val);
+        }
+        getAllUniqueValues(head.next, set, valueList,duplicateList);
+    }
+}
