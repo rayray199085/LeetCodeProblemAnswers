@@ -1,0 +1,64 @@
+/**
+ * Reverse a linked list from position m to n. Do it in one-pass.
+ *
+ * Note: 1 ≤ m ≤ n ≤ length of list.
+ *
+ * Example:
+ *
+ * Input: 1->2->3->4->5->NULL, m = 2, n = 4
+ * Output: 1->4->3->2->5->NULL
+ */
+ 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        ListNode newHead = null;
+        if (head == null) {
+            return newHead;
+        }
+        List<Integer> integers = new ArrayList<>();
+        getIntegerValues(integers, head);
+        if (m <= n && m - 1 > -1 && n - 1 < integers.size()) {
+            reversePartValues(integers, m - 1, n - 1);
+            if(integers.size()>0){
+                newHead = new ListNode(integers.remove(0));
+                generateNewLinkedList(integers,newHead);
+            }
+        }
+        return newHead;
+    }
+
+    private void generateNewLinkedList(List<Integer> integers, ListNode newHead) {
+        if(integers.size()==0){
+            return;
+        }
+        ListNode nextNode = new ListNode(integers.remove(0));
+        newHead.next = nextNode;
+        generateNewLinkedList(integers,nextNode);
+    }
+
+    private void reversePartValues(List<Integer> integers, int start, int end) {
+        while (start < end) {
+            int temp = integers.get(start);
+            integers.set(start, integers.get(end));
+            integers.set(end, temp);
+            start++;
+            end--;
+        }
+    }
+
+    private void getIntegerValues(List<Integer> integers, ListNode head) {
+        if (head == null) {
+            return;
+        }
+        integers.add(head.val);
+        getIntegerValues(integers, head.next);
+    }
+}
