@@ -1,0 +1,52 @@
+/**
+ * Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+ *
+ * Example:
+ *
+ * Input: "25525511135"
+ * Output: ["255.255.11.135", "255.255.111.35"]
+ */
+
+class Solution {
+    public static List<String> restoreIpAddresses(String s) {
+        List<String> stringList = new ArrayList<>();
+        if (s.length() == 0 || s.length() > 12) {
+            return stringList;
+        }
+        findAllAddresses(stringList, s, new StringBuilder(), 0, 0);
+        for(int i = 0; i < stringList.size(); i++){
+            stringList.set(i,stringList.get(i).substring(1));
+        }
+        return stringList;
+    }
+
+    private static void findAllAddresses(List<String> stringList, String s, StringBuilder currentString, int currentIndex, int segment) {
+        if (segment > 4) {
+            return;
+        }
+        if (segment == 4 && currentIndex == s.length() && currentString.toString().length() == s.length() + 4) {
+            stringList.add(currentString.toString());
+            return;
+        }
+        for (int i = currentIndex; i < s.length(); i++) {
+            currentString.append("." + String.valueOf(s.charAt(i)));
+            findAllAddresses(stringList, s, currentString, i + 1, segment + 1);
+            currentString.delete(currentString.length() - 2, currentString.length());
+
+            if (i + 1 < s.length() && s.charAt(i) > '0') {
+                currentString.append("." + s.substring(i, i + 2));
+                findAllAddresses(stringList, s, currentString, i + 2, segment + 1);
+                currentString.delete(currentString.length() - 3, currentString.length());
+            }
+
+            if (i + 2 < s.length() && s.charAt(i) > '0') {
+                String substring = s.substring(i, i + 3);
+                if (Integer.parseInt(substring) <= 255) {
+                    currentString.append("." + substring);
+                    findAllAddresses(stringList, s, currentString, i + 3, segment + 1);
+                    currentString.delete(currentString.length() - 4, currentString.length());
+                }
+            }
+        }
+    }
+}
