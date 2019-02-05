@@ -1,0 +1,71 @@
+/**
+ * Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+ *
+ * For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+ *
+ *     1
+ *    / \
+ *   2   2
+ *  / \ / \
+ * 3  4 4  3
+ * But the following [1,2,2,null,3,null,3] is not:
+ *
+ *     1
+ *    / \
+ *   2   2
+ *    \   \
+ *    3    3
+ */
+ 
+ /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+     public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        List<Integer> treeValues = new ArrayList<>();
+        int[] childrenCount = new int[2];
+        inOrderTraverse(treeValues, root, childrenCount, 1);
+        if (childrenCount[0] != childrenCount[1]) {
+            return false;
+        }
+        return checkWhetherSymmetric(treeValues, 0, treeValues.size() - 1);
+    }
+
+
+    private boolean checkWhetherSymmetric(List<Integer> treeValues, int start, int end) {
+        while (start <= end) {
+            if (!treeValues.get(start).equals(treeValues.get(end))) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    private void inOrderTraverse(List<Integer> treeValues, TreeNode root, int[] childrenCount, int level) {
+        if (root == null) {
+            return;
+        }
+        if (root.left != null) {
+            childrenCount[0] += level;
+            inOrderTraverse(treeValues, root.left, childrenCount, level + 1);
+        }
+        treeValues.add(root.val);
+        if (root.right != null) {
+            childrenCount[1] += level;
+            inOrderTraverse(treeValues, root.right, childrenCount, level + 1);
+        }
+
+    }
+
+}
