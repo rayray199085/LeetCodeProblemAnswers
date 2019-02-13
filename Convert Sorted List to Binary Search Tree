@@ -1,0 +1,73 @@
+/**
+ * Given a singly linked list where elements are sorted in ascending order, 
+ * 
+ * convert it to a height balanced BST.
+ *
+ * For this problem, a height-balanced binary tree is defined as a binary tree 
+ * 
+ * in which the depth of the two subtrees of every node never differ by more than 1.
+ *
+ * Example:
+ *
+ * Given the sorted linked list: [-10,-3,0,5,9],
+ *
+ * One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+ *
+ *       0
+ *      / \
+ *    -3   9
+ *    /   /
+ *  -10  5
+ */
+ 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+     public TreeNode sortedListToBST(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        List<Integer> valueList = new ArrayList<>();
+        convertLinkedListToArray(valueList,head);
+        if(valueList.size() == 0){
+            return null;
+        }
+        int start = 0;
+        int end = valueList.size() - 1;
+        return buildTreeWithArray(valueList,start,end);
+    }
+
+    private TreeNode buildTreeWithArray(List<Integer> valueList, int start, int end) {
+        if(start > end){
+            return null;
+        }
+        int mid = (start + end) / 2;
+        TreeNode node = new TreeNode(valueList.get(mid));
+        node.left = buildTreeWithArray(valueList,start,mid-1);
+        node.right = buildTreeWithArray(valueList,mid+1,end);
+        return node;
+    }
+
+    private  void convertLinkedListToArray(List<Integer> valueList, ListNode head) {
+        if(head == null){
+            return;
+        }
+        valueList.add(head.val);
+        convertLinkedListToArray(valueList,head.next);
+    }
+}
