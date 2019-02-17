@@ -1,0 +1,65 @@
+/**
+ * Given a binary tree, flatten it to a linked list in-place.
+ *
+ * For example, given the following tree:
+ *
+ *     1
+ *    / \
+ *   2   5
+ *  / \   \
+ * 3   4   6
+ * The flattened tree should look like:
+ *
+ * 1
+ *  \
+ *   2
+ *    \
+ *     3
+ *      \
+ *       4
+ *        \
+ *         5
+ *          \
+ *           6
+ */
+ /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public static void flatten(TreeNode root) {
+        if(root == null) return;
+        List<Integer> treeValues = new ArrayList<>();
+        getTreeValues(treeValues,root);
+//        Collections.sort(treeValues);
+        buildNewTree(null,root,treeValues);
+    }
+
+    private static void buildNewTree(TreeNode parent,TreeNode root, List<Integer> treeValues) {
+        if(treeValues.size() == 0){
+            return;
+        }
+        if(root == null){
+            root = new TreeNode(treeValues.remove(0));
+            parent.right = root;
+        }else{
+            root.val = treeValues.remove(0);
+            root.left = null;
+        }
+        buildNewTree(root,root.right,treeValues);
+    }
+
+    private static void getTreeValues(List<Integer> treeValues, TreeNode root) {
+        if(root == null){
+            return;
+        }
+        treeValues.add(root.val);
+        getTreeValues(treeValues,root.left);
+        getTreeValues(treeValues,root.right);
+    }
+}
