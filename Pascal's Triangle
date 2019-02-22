@@ -1,0 +1,44 @@
+/**
+ * Given a non-negative index k where k ≤ 33, return the kth index row of the Pascal's triangle.
+ *
+ * Note that the row index starts from 0.
+ *
+ *
+ * In Pascal's triangle, each number is the sum of the two numbers directly above it.
+ *
+ * Example:
+ *
+ * Input: 3
+ * Output: [1,3,3,1]
+ */
+public class PascalsTriangleII {
+    public static void main(String[] args) {
+        List<Integer> row = getRow(0);
+        System.out.println(row.toString());
+    }
+
+    public static List<Integer> getRow(int rowIndex) {
+        List<Integer> integerList = new ArrayList<>();
+        return getTargetNumList(integerList, rowIndex, 0);
+    }
+
+    private static List<Integer> getTargetNumList(List<Integer> integerList, int rowIndex, int currentLevel) {
+        if (currentLevel > rowIndex) {
+            return integerList;
+        }
+        if (currentLevel == 0 || currentLevel == 1) {
+            integerList.add(1);
+        } else {
+            List<Integer> nextList = new ArrayList<>();
+            nextList.add(1);
+            nextList.add(1);
+            int position = 1;
+            for (int i = 0; i < integerList.size() - 1; i++) {
+                int j = i + 1;
+                nextList.add(position++, integerList.get(i) + integerList.get(j));
+            }
+            integerList = nextList;
+        }
+        return getTargetNumList(integerList, rowIndex, currentLevel + 1);
+    }
+}
