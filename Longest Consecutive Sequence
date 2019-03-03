@@ -1,0 +1,87 @@
+/**
+ * Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+ *
+ * Your algorithm should run in O(n) complexity.
+ *
+ * Example:
+ *
+ * Input: [100, 4, 200, 1, 3, 2]
+ * Output: 4
+ * Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+ */
+ class Solution {
+    public int longestConsecutive(int[] nums) {
+        int[] parent = new int[nums.length];
+        int lowest = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            parent[i] = -1;
+        }
+        if (nums.length < 2) {
+            return nums.length;
+        } else {
+            for (int i = 0; i < nums.length - 1; i++) {
+                int j = i + 1;
+                if (i == 0) {
+                    if (nums[i] >= nums[j]) {
+                        parent[j] = i;
+                        lowest = j;
+                    } else {
+                        parent[i] = j;
+                        lowest = i;
+                    }
+                }else{
+                    if(nums[j] < nums[lowest]){
+                        parent[j] = lowest;
+                        lowest = j;
+                    }else{
+                        int lowParent = parent[lowest];
+                        int preLow = lowest;
+                        while(nums[lowParent] < nums[j]){  // 4
+                            if(parent[lowParent] == -1){
+                                break;
+                            }
+                            preLow = lowParent;
+                            lowParent = parent[lowParent];
+                        }
+                        if(nums[j] > nums[lowParent]){
+                            if(parent[lowParent] == -1){
+                                parent[lowParent] = j;
+                            }else{
+                                int grantParent = parent[lowParent];
+                                parent[j] = grantParent;
+                                parent[lowParent] = j;
+                            }
+
+                        }else{
+                            parent[preLow] = j;
+                            parent[j] = lowParent;
+                        }
+                    }
+                }
+            }
+        }
+
+        int count = 0;
+        int continuesCount = 1;
+        int maxCount = continuesCount;
+        while(count < nums.length){
+            if(parent[lowest] != -1){
+                if(nums[parent[lowest]] - nums[lowest] == 1){
+                    continuesCount++;
+                    if(maxCount < continuesCount){
+                        maxCount = continuesCount;
+                    }
+                }
+                else if(nums[parent[lowest]] - nums[lowest] == 0){
+
+                }
+                else {
+                    continuesCount = 1;
+                }
+            }
+            lowest = parent[lowest];
+            count++;
+        }
+        return maxCount;
+    }
+}
