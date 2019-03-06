@@ -1,0 +1,59 @@
+/**
+ * Given a string s, partition s such that every substring of the partition is a palindrome.
+ *
+ * Return all possible palindrome partitioning of s.
+ *
+ * Example:
+ *
+ * Input: "aab"
+ * Output:
+ * [
+ *   ["aa","b"],
+ *   ["a","a","b"]
+ * ]
+ */
+ class Solution {
+   public List<List<String>> partition(String s) {
+        List<List<String>> listList = new ArrayList<>();
+        if (s.length() == 0) {
+            return listList;
+        }
+        findAllPalindromePartitions(listList, s, new ArrayList<>(), 0);
+        return listList;
+    }
+
+    private void findAllPalindromePartitions(List<List<String>> listList, String s, ArrayList<String> stringList, int currentIndex) {
+        if (currentIndex == s.length()) {
+            List<String> tempList = new ArrayList<>(stringList);
+            listList.add(tempList);
+            return;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = currentIndex; i < s.length(); i++) {
+            builder.append(String.valueOf(s.charAt(i)));
+            if (checkWhetherIsPalindrome(builder.toString())) {
+                stringList.add(builder.toString());
+                currentIndex += builder.toString().length();
+                findAllPalindromePartitions(listList, s, stringList, currentIndex);
+                stringList.remove(stringList.size() - 1);
+                currentIndex -= builder.toString().length();
+            }
+        }
+    }
+
+    private boolean checkWhetherIsPalindrome(String partition) {
+        if (partition.length() == 1) {
+            return true;
+        }
+        int start = 0;
+        int end = partition.length() - 1;
+        while (start <= end) {
+            if (partition.charAt(start) != partition.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}
