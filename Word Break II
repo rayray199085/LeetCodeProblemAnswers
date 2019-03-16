@@ -1,0 +1,85 @@
+/**
+ * Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, 
+ * 
+ * add spaces in s to construct a sentence where each word is a valid dictionary word. Return all such possible sentences.
+ *
+ * Note:
+ *
+ * The same word in the dictionary may be reused multiple times in the segmentation.
+ * You may assume the dictionary does not contain duplicate words.
+ * Example 1:
+ *
+ * Input:
+ * s = "catsanddog"
+ * wordDict = ["cat", "cats", "and", "sand", "dog"]
+ * Output:
+ * [
+ *   "cats and dog",
+ *   "cat sand dog"
+ * ]
+ * Example 2:
+ *
+ * Input:
+ * s = "pineapplepenapple"
+ * wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
+ * Output:
+ * [
+ *   "pine apple pen apple",
+ *   "pineapple pen apple",
+ *   "pine applepen apple"
+ * ]
+ * Explanation: Note that you are allowed to reuse a dictionary word.
+ * Example 3:
+ *
+ * Input:
+ * s = "catsandog"
+ * wordDict = ["cats", "dog", "sand", "and", "cat"]
+ * Output:
+ * []
+ */
+ class Solution {
+    public static List<String> wordBreak(String s, List<String> wordDict) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        Set<String> set = new HashSet<>(wordDict);
+        int maxLength = 0;
+        for (String str : wordDict) {
+            maxLength = Math.max(str.length(), maxLength);
+        }
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = i - 1; j > -1; j--) {
+                if (i - j > maxLength) {
+                    break;
+                }
+                if (dp[j] && set.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        List<String> wordList = new ArrayList<>();
+        if(dp[s.length()]){
+            findAllSolutions(wordList, dp, 0, 1, s, new StringBuilder(),set);
+        }
+        return wordList;
+    }
+
+    private static void findAllSolutions(List<String> wordList, boolean[] dp, int previous, int currentIndex, String s, StringBuilder builder, Set<String> set) {
+        if (currentIndex == dp.length) {
+            wordList.add(builder.toString().substring(0,builder.length()-1));
+            return;
+        }
+        for (int i = currentIndex; i <= s.length(); i++) {
+            if (dp[i]) {
+                int length = i - previous + 1;
+                String subStr = s.substring(previous, i);
+                if(set.contains(subStr)) {
+                    builder.append(s.substring(previous, i) + " ");
+                    findAllSolutions(wordList, dp, i, i + 1, s, builder, set);
+                    builder.delete(builder.length() - length, builder.length());
+                }
+            }
+        }
+    }
+}
